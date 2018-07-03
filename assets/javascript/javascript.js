@@ -1,83 +1,94 @@
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyADaacYh9WfNPWktuq0Z9T8sivz5F3Bd1s",
-    authDomain: "fir-dcdi.firebaseapp.com",
-    databaseURL: "https://fir-dcdi.firebaseio.com",
-    projectId: "fir-dcdi",
-    storageBucket: "fir-dcdi.appspot.com",
-    messagingSenderId: "163784529275"
+    apiKey: "AIzaSyDONV0qBR4E3u1I5U5bP7uHALLb801K-wE",
+    authDomain: "train-time-3d3bf.firebaseapp.com",
+    databaseURL: "https://train-time-3d3bf.firebaseio.com",
+    projectId: "train-time-3d3bf",
+    storageBucket: "",
+    messagingSenderId: "972098948694"
 };
 firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var employeeName;
-var employeeRole;
-var employeeRate;
-var employeeStart;
-var monthlyRate;
-var worked;
-var total;
+var trainName;
+var destinationName;
+var ftTime;
+var frequency;
+var nextArrival;
+var minutesAway;
+var currentTime = moment().format("HH:mm");
+//console.log(moment(currentTime).format("hh:mm"));
+console.log(currentTime);
+console.log(moment())
 
 
 $("#submit").on("click", function (event) {
     // Don't refresh the page!
     event.preventDefault();
 
-    employeeName = $("#emName").val().trim();
-    employeeRole = $("#emRole").val().trim();
-    employeeStart = $("#emStart").val().trim();
-    employeeRate = $("#emRate").val().trim();
-    // var startDay = moment(employeeStart);
-    // // var now = moment();
-    // worked = moment().diff(startDay, "months", true);
-    // ;
-    // console.log("WORKED", Math.round(worked));
-    // total = worked * employeeRate;
+    trainName = $("#tName").val().trim();
+    destinationName = $("#dName").val().trim();
+    ftTime = $("#ftTime").val().trim();
+    frequency = $("#frequency").val().trim();
+    console.log(trainName, destinationName, frequency, ftTime);
+    var ftTimeC = moment(ftTime, "HH:mm").subtract(1, "years");
+    console.log(ftTimeC);
+    var frequencyC = parseInt(frequency);
+    //frequencyC = moment.duration(frequencyC).asMinutes();
+    console.log(frequencyC);
+
+    var diffTime = moment().diff(moment(ftTimeC), "minutes");
+    console.log("Difference in time :" + diffTime);
+
+    var tRemainder = diffTime % frequencyC;
+    console.log(tRemainder);
+
+    var tMinutesTillTrain = frequencyC - tRemainder;
+    console.log("Minutes Til Next Train: " + tMinutesTillTrain);
+
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("Arrival Time: " + moment(nextTrain).format("hh:mm"));
+    
 
     database.ref().push({
-        name: employeeName,
-        role: employeeRole,
-        start: employeeStart,
-        rate: employeeRate,
-        // months: Math.round(worked),
-        // total: total,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP,
-      })
+        trainName: trainName,
+        destination: destinationName,
+        ftTime: ftTime,
+        nextTrain: moment(nextTrain).format("hh:mm"),
+        minutesAway: tMinutesTillTrain,
+        frequency: frequency,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
 
 
-
-})
-
-database.ref().on("child_added", function(childSnapshot) {
-
-    // Log everything that's coming out of snapshot
-    console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().role);
-    console.log(childSnapshot.val().start);
-    console.log(childSnapshot.val().rate);
-    console.log(childSnapshot.val().dateAdded);
 
 });
 
-database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+// database.ref("/delcie").on("value", function(snapshot){
+//     console.log(snapshot.val());
+// })
+database.ref().on("child_added", function (childSnapshot) {
+
+    // Log everything that's coming out of snapshot
+    console.log(childSnapshot.val().trainName);
+    console.log(childSnapshot.val().destination);
+    console.log(childSnapshot.val().frequency);
+    console.log(childSnapshot.val().ftTime);
+
+});
+
+database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function (snapshot) {
     // Change the HTML to reflect
     var newRow = $("<tr>");
-    newRow.append($("<td>").text(snapshot.val().name));
-    newRow.append($("<td>").text(snapshot.val().role));
-    newRow.append($("<td>").text(snapshot.val().start));
-    newRow.append($("<td>").text(snapshot.val().months));
-    newRow.append($("<td>").text(snapshot.val().rate));
-    newRow.append($("<td>").text(snapshot.val().total));
+    newRow.append($("<td>").text(snapshot.val().trainName));
+    newRow.append($("<td>").text(snapshot.val().destination));
+    newRow.append($("<td>").text(snapshot.val().frequency));
+    newRow.append($("<td>").text(snapshot.val().nextTrain));
+    newRow.append($("<td>").text(snapshot.val().minutesAway));
+    //newRow.append($("<td>").text(snapshot.val().total));
     newRow.appendTo($("tbody"));
-    // $("#name-display").text(snapshot.val().name);
-    // $("#role-display").text(snapshot.val().role);
-    // $("#start-display").text(snapshot.val().start);
-    // $("#months-display").text(snapshot.val().months);
-    // $("#rate-display").text(snapshot.val().start);
-    // $("#total-display").text(snapshot.val().months);
-  });
+});
 
-  console.log(moment().format("MMM Do YY"));
-  console.log(moment().format("DD/MM/YY hh:mm A"));
-
+console.log(moment().format("MMM Do YY"));
+console.log(moment().format("DD/MM/YY hh:mm A"));
