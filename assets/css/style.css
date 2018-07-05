@@ -1,0 +1,13 @@
+body {
+    background-image: url("../images/bk3.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: top;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+}
+
+.jumbotron, table, form {
+    background: rgba(0, 0, 0, 0.3);
+}

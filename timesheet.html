@@ -8,6 +8,8 @@
   <title>Document</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -16,7 +18,7 @@
   </div>
   <div class="container">
     <table class="table">
-      <thead class="thead-dark">
+      <thead class="bg-warning text-dark">
         <tr>
           <th scope="col">Train Name</th>
           <th scope="col">Destination</th>
@@ -37,7 +39,7 @@
       </tbody>
     </table>
 
-    <form>
+    <form class="mb-5">
       <h2>Add Train</h2>
       <div class="form-group">
         <label>Train Name</label>
@@ -55,7 +57,7 @@
         <label>Frequency</label>
         <input type="text" class="form-control" id="frequency" aria-describedby="textHelp" placeholder="Frequency">
       </div>
-      <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" id="submit" class="btn btn-warning">Submit</button>
     </form>
 
   </div>
